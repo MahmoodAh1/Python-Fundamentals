@@ -1,0 +1,241 @@
+import os
+
+def add_book():
+    book_id = input("Enter book ID: ")
+    title = input("Enter book title: ")
+    author = input("Enter author name: ")
+    with open('books.txt', 'a') as file:
+        file.write(f"{book_id},{title},{author}\n")
+    print("Book added successfully.")
+
+def view_books():
+    try:
+        with open('books.txt', 'r') as file:
+            for line in file:
+                book_id, title, author = line.strip().split(',')
+                print(f"ID: {book_id}, Title: {title}, Author: {author}")
+    except FileNotFoundError:
+        print("No books found.")
+
+def update_book():
+    book_id = input("Enter book ID to update: ")
+    updated_title = input("Enter new title: ")
+    updated_author = input("Enter new author: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('books.txt', 'r') as file:
+            for line in file:
+                id, title, author = line.strip().split(',')
+                if id == book_id:
+                    updated_lines.append(f"{book_id},{updated_title},{updated_author}\n")
+                    found = True
+                else:
+                    updated_lines.append(line)
+
+        if found:
+            with open('books.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Book updated successfully.")
+        else:
+            print("Book ID not found.")
+    except FileNotFoundError:
+        print("No books found.")
+
+def delete_book():
+    book_id = input("Enter book ID to delete: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('books.txt', 'r') as file:
+            for line in file:
+                id, title, author = line.strip().split(',')
+                if id != book_id:
+                    updated_lines.append(line)
+                else:
+                    found = True
+
+        if found:
+            with open('books.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Book deleted successfully.")
+        else:
+            print("Book ID not found.")
+    except FileNotFoundError:
+        print("No books found.")
+
+
+def add_student():
+    student_id = input("Enter student ID: ")
+    name = input("Enter student name: ")
+    course = input("Enter course: ")
+    with open('students.txt', 'a') as file:
+        file.write(f"{student_id},{name},{course}\n")
+    print("Student added successfully.")
+
+def view_students():
+    try:
+        with open('students.txt', 'r') as file:
+            for line in file:
+                student_id, name, course = line.strip().split(',')
+                print(f"ID: {student_id}, Name: {name}, Course: {course}")
+    except FileNotFoundError:
+        print("No students found.")
+
+def update_student():
+    student_id = input("Enter student ID to update: ")
+    updated_name = input("Enter new name: ")
+    updated_course = input("Enter new course: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('students.txt', 'r') as file:
+            for line in file:
+                id, name, course = line.strip().split(',')
+                if id == student_id:
+                    updated_lines.append(f"{student_id},{updated_name},{updated_course}\n")
+                    found = True
+                else:
+                    updated_lines.append(line)
+
+        if found:
+            with open('students.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Student updated successfully.")
+        else:
+            print("Student ID not found.")
+    except FileNotFoundError:
+        print("No students found.")
+
+def delete_student():
+    student_id = input("Enter student ID to delete: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('students.txt', 'r') as file:
+            for line in file:
+                id, name, course = line.strip().split(',')
+                if id != student_id:
+                    updated_lines.append(line)
+                else:
+                    found = True
+
+        if found:
+            with open('students.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Student deleted successfully.")
+        else:
+            print("Student ID not found.")
+    except FileNotFoundError:
+        print("No students found.")
+
+
+def add_librarian():
+    librarian_id = input("Enter librarian ID: ")
+    name = input("Enter librarian name: ")
+    with open('librarians.txt', 'a') as file:
+        file.write(f"{librarian_id},{name}\n")
+    print("Librarian added successfully.")
+
+def view_librarians():
+    try:
+        with open('librarians.txt', 'r') as file:
+            for line in file:
+                librarian_id, name = line.strip().split(',')
+                print(f"ID: {librarian_id}, Name: {name}")
+    except FileNotFoundError:
+        print("No librarians found.")
+
+def update_librarian():
+    librarian_id = input("Enter librarian ID to update: ")
+    updated_name = input("Enter new name: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('librarians.txt', 'r') as file:
+            for line in file:
+                id, name = line.strip().split(',')
+                if id == librarian_id:
+                    updated_lines.append(f"{librarian_id},{updated_name}\n")
+                    found = True
+                else:
+                    updated_lines.append(line)
+
+        if found:
+            with open('librarians.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Librarian updated successfully.")
+        else:
+            print("Librarian ID not found.")
+    except FileNotFoundError:
+        print("No librarians found.")
+
+def delete_librarian():
+    librarian_id = input("Enter librarian ID to delete: ")
+
+    updated_lines = []
+    found = False
+
+    try:
+        with open('librarians.txt', 'r') as file:
+            for line in file:
+                id, name = line.strip().split(',')
+                if id != librarian_id:
+                    updated_lines.append(line)
+                else:
+                    found = True
+
+        if found:
+            with open('librarians.txt', 'w') as file:
+                file.writelines(updated_lines)
+            print("Librarian deleted successfully.")
+        else:
+            print("Librarian ID not found.")
+    except FileNotFoundError:
+        print("No librarians found.")
+
+
+def borrow_book():
+    borrow_id = input("Enter borrow ID: ")
+    book_id = input("Enter book ID: ")
+    student_id = input("Enter student ID: ")
+    borrow_date = input("Enter borrow date: ")
+    with open('borrow.txt', 'a') as file:
+        file.write(f"{borrow_id},{book_id},{student_id},{borrow_date}\n")
+    print("Book borrowed successfully.")
+
+def view_borrowed_books():
+    try:
+        with open('borrow.txt', 'r') as file:
+            for line in file:
+                borrow_id, book_id, student_id, borrow_date = line.strip().split(',')
+                print(f"Borrow ID: {borrow_id}, Book ID: {book_id}, Student ID: {student_id}, Borrow Date: {borrow_date}")
+    except FileNotFoundError:
+        print("No borrowed books found.")
+
+def return_book():
+    return_id = input("Enter return ID: ")
+    borrow_id = input("Enter borrow ID: ")
+    return_date = input("Enter return date: ")
+    with open('return.txt', 'a') as file:
+        file.write(f"{return_id},{borrow_id},{return_date}\n")
+    print("Book returned successfully.")
+
+def view_returned_books():
+    try:
+        with open('return.txt', 'r') as file:
+            for line in file:
+                return_id, borrow_id, return_date = line.strip().split(',')
+                print(f"Return ID: {return_id}, Borrow ID: {borrow_id}, Return Date: {return_date}")
+    except FileNotFoundError:
+        print("No returned books found.")

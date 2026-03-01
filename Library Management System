@@ -1,241 +1,311 @@
-import os
-
-def add_book():
-    book_id = input("Enter book ID: ")
-    title = input("Enter book title: ")
-    author = input("Enter author name: ")
-    with open('books.txt', 'a') as file:
-        file.write(f"{book_id},{title},{author}\n")
-    print("Book added successfully.")
-
-def view_books():
-    try:
-        with open('books.txt', 'r') as file:
-            for line in file:
-                book_id, title, author = line.strip().split(',')
-                print(f"ID: {book_id}, Title: {title}, Author: {author}")
-    except FileNotFoundError:
-        print("No books found.")
-
-def update_book():
-    book_id = input("Enter book ID to update: ")
-    updated_title = input("Enter new title: ")
-    updated_author = input("Enter new author: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('books.txt', 'r') as file:
-            for line in file:
-                id, title, author = line.strip().split(',')
-                if id == book_id:
-                    updated_lines.append(f"{book_id},{updated_title},{updated_author}\n")
-                    found = True
-                else:
-                    updated_lines.append(line)
-
-        if found:
-            with open('books.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Book updated successfully.")
-        else:
-            print("Book ID not found.")
-    except FileNotFoundError:
-        print("No books found.")
-
-def delete_book():
-    book_id = input("Enter book ID to delete: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('books.txt', 'r') as file:
-            for line in file:
-                id, title, author = line.strip().split(',')
-                if id != book_id:
-                    updated_lines.append(line)
-                else:
-                    found = True
-
-        if found:
-            with open('books.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Book deleted successfully.")
-        else:
-            print("Book ID not found.")
-    except FileNotFoundError:
-        print("No books found.")
+import csv
+from pathlib import Path
+import tkinter as tk
+from tkinter import messagebox, ttk
 
 
-def add_student():
-    student_id = input("Enter student ID: ")
-    name = input("Enter student name: ")
-    course = input("Enter course: ")
-    with open('students.txt', 'a') as file:
-        file.write(f"{student_id},{name},{course}\n")
-    print("Student added successfully.")
+BASE_DIR = Path(__file__).parent
+FILES = {
+    "books": BASE_DIR / "books.txt",
+    "students": BASE_DIR / "students.txt",
+    "librarians": BASE_DIR / "librarians.txt",
+    "borrow": BASE_DIR / "borrow.txt",
+    "return": BASE_DIR / "return.txt",
+}
 
-def view_students():
-    try:
-        with open('students.txt', 'r') as file:
-            for line in file:
-                student_id, name, course = line.strip().split(',')
-                print(f"ID: {student_id}, Name: {name}, Course: {course}")
-    except FileNotFoundError:
-        print("No students found.")
+SCHEMAS = {
+    "books": ["book_id", "title", "author"],
+    "students": ["student_id", "name", "course"],
+    "librarians": ["librarian_id", "name"],
+    "borrow": ["borrow_id", "book_id", "student_id", "borrow_date"],
+    "return": ["return_id", "borrow_id", "return_date"],
+}
 
-def update_student():
-    student_id = input("Enter student ID to update: ")
-    updated_name = input("Enter new name: ")
-    updated_course = input("Enter new course: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('students.txt', 'r') as file:
-            for line in file:
-                id, name, course = line.strip().split(',')
-                if id == student_id:
-                    updated_lines.append(f"{student_id},{updated_name},{updated_course}\n")
-                    found = True
-                else:
-                    updated_lines.append(line)
-
-        if found:
-            with open('students.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Student updated successfully.")
-        else:
-            print("Student ID not found.")
-    except FileNotFoundError:
-        print("No students found.")
-
-def delete_student():
-    student_id = input("Enter student ID to delete: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('students.txt', 'r') as file:
-            for line in file:
-                id, name, course = line.strip().split(',')
-                if id != student_id:
-                    updated_lines.append(line)
-                else:
-                    found = True
-
-        if found:
-            with open('students.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Student deleted successfully.")
-        else:
-            print("Student ID not found.")
-    except FileNotFoundError:
-        print("No students found.")
+DISPLAY_NAMES = {
+    "books": "Books",
+    "students": "Students",
+    "librarians": "Librarians",
+    "borrow": "Borrow Records",
+    "return": "Return Records",
+}
 
 
-def add_librarian():
-    librarian_id = input("Enter librarian ID: ")
-    name = input("Enter librarian name: ")
-    with open('librarians.txt', 'a') as file:
-        file.write(f"{librarian_id},{name}\n")
-    print("Librarian added successfully.")
-
-def view_librarians():
-    try:
-        with open('librarians.txt', 'r') as file:
-            for line in file:
-                librarian_id, name = line.strip().split(',')
-                print(f"ID: {librarian_id}, Name: {name}")
-    except FileNotFoundError:
-        print("No librarians found.")
-
-def update_librarian():
-    librarian_id = input("Enter librarian ID to update: ")
-    updated_name = input("Enter new name: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('librarians.txt', 'r') as file:
-            for line in file:
-                id, name = line.strip().split(',')
-                if id == librarian_id:
-                    updated_lines.append(f"{librarian_id},{updated_name}\n")
-                    found = True
-                else:
-                    updated_lines.append(line)
-
-        if found:
-            with open('librarians.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Librarian updated successfully.")
-        else:
-            print("Librarian ID not found.")
-    except FileNotFoundError:
-        print("No librarians found.")
-
-def delete_librarian():
-    librarian_id = input("Enter librarian ID to delete: ")
-
-    updated_lines = []
-    found = False
-
-    try:
-        with open('librarians.txt', 'r') as file:
-            for line in file:
-                id, name = line.strip().split(',')
-                if id != librarian_id:
-                    updated_lines.append(line)
-                else:
-                    found = True
-
-        if found:
-            with open('librarians.txt', 'w') as file:
-                file.writelines(updated_lines)
-            print("Librarian deleted successfully.")
-        else:
-            print("Librarian ID not found.")
-    except FileNotFoundError:
-        print("No librarians found.")
+def read_records(dataset):
+    records = []
+    path = FILES[dataset]
+    if not path.exists():
+        return records
+    with path.open("r", newline="", encoding="utf-8") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if len(row) != len(SCHEMAS[dataset]):
+                continue
+            records.append(dict(zip(SCHEMAS[dataset], row)))
+    return records
 
 
-def borrow_book():
-    borrow_id = input("Enter borrow ID: ")
-    book_id = input("Enter book ID: ")
-    student_id = input("Enter student ID: ")
-    borrow_date = input("Enter borrow date: ")
-    with open('borrow.txt', 'a') as file:
-        file.write(f"{borrow_id},{book_id},{student_id},{borrow_date}\n")
-    print("Book borrowed successfully.")
+def write_records(dataset, records):
+    path = FILES[dataset]
+    with path.open("w", newline="", encoding="utf-8") as file:
+        writer = csv.writer(file)
+        for record in records:
+            writer.writerow([record[field] for field in SCHEMAS[dataset]])
 
-def view_borrowed_books():
-    try:
-        with open('borrow.txt', 'r') as file:
-            for line in file:
-                borrow_id, book_id, student_id, borrow_date = line.strip().split(',')
-                print(f"Borrow ID: {borrow_id}, Book ID: {book_id}, Student ID: {student_id}, Borrow Date: {borrow_date}")
-    except FileNotFoundError:
-        print("No borrowed books found.")
 
-def return_book():
-    return_id = input("Enter return ID: ")
-    borrow_id = input("Enter borrow ID: ")
-    return_date = input("Enter return date: ")
-    with open('return.txt', 'a') as file:
-        file.write(f"{return_id},{borrow_id},{return_date}\n")
-    print("Book returned successfully.")
+def primary_key_for(dataset):
+    return SCHEMAS[dataset][0]
 
-def view_returned_books():
-    try:
-        with open('return.txt', 'r') as file:
-            for line in file:
-                return_id, borrow_id, return_date = line.strip().split(',')
-                print(f"Return ID: {return_id}, Borrow ID: {borrow_id}, Return Date: {return_date}")
-    except FileNotFoundError:
-        print("No returned books found.")
+
+class DataTab:
+    def __init__(self, parent, dataset, refresh_dashboard):
+        self.dataset = dataset
+        self.refresh_dashboard = refresh_dashboard
+        self.columns = SCHEMAS[dataset]
+        self.primary_key = primary_key_for(dataset)
+
+        self.frame = ttk.Frame(parent, padding=12)
+        self.frame.columnconfigure(0, weight=3)
+        self.frame.columnconfigure(1, weight=2)
+        self.frame.rowconfigure(1, weight=1)
+
+        title = ttk.Label(
+            self.frame,
+            text=DISPLAY_NAMES[dataset],
+            font=("Segoe UI Semibold", 16),
+        )
+        title.grid(row=0, column=0, sticky="w")
+
+        self.search_var = tk.StringVar()
+        search_entry = ttk.Entry(self.frame, textvariable=self.search_var, width=30)
+        search_entry.grid(row=0, column=1, sticky="e")
+        search_entry.insert(0, "Search...")
+        search_entry.bind("<FocusIn>", self._clear_placeholder)
+        search_entry.bind("<KeyRelease>", lambda _evt: self.refresh_table())
+
+        table_wrap = ttk.Frame(self.frame)
+        table_wrap.grid(row=1, column=0, sticky="nsew", padx=(0, 12), pady=(10, 0))
+        table_wrap.rowconfigure(0, weight=1)
+        table_wrap.columnconfigure(0, weight=1)
+
+        self.table = ttk.Treeview(
+            table_wrap,
+            columns=self.columns,
+            show="headings",
+            selectmode="browse",
+            height=15,
+        )
+        for col in self.columns:
+            self.table.heading(col, text=col.replace("_", " ").title())
+            self.table.column(col, width=120, anchor="center")
+        self.table.grid(row=0, column=0, sticky="nsew")
+        self.table.bind("<<TreeviewSelect>>", self.load_selected_record)
+
+        y_scroll = ttk.Scrollbar(table_wrap, orient="vertical", command=self.table.yview)
+        self.table.configure(yscrollcommand=y_scroll.set)
+        y_scroll.grid(row=0, column=1, sticky="ns")
+
+        form_wrap = ttk.LabelFrame(self.frame, text="Record Details", padding=12)
+        form_wrap.grid(row=1, column=1, sticky="nsew", pady=(10, 0))
+        form_wrap.columnconfigure(1, weight=1)
+
+        self.field_vars = {}
+        for idx, field in enumerate(self.columns):
+            lbl = ttk.Label(form_wrap, text=field.replace("_", " ").title())
+            lbl.grid(row=idx, column=0, sticky="w", pady=4)
+            var = tk.StringVar()
+            entry = ttk.Entry(form_wrap, textvariable=var)
+            entry.grid(row=idx, column=1, sticky="ew", pady=4)
+            self.field_vars[field] = var
+
+        buttons = ttk.Frame(form_wrap)
+        buttons.grid(row=len(self.columns), column=0, columnspan=2, sticky="ew", pady=(10, 0))
+        buttons.columnconfigure((0, 1, 2), weight=1)
+
+        ttk.Button(buttons, text="Add", command=self.add_record).grid(row=0, column=0, sticky="ew", padx=2)
+        ttk.Button(buttons, text="Update", command=self.update_record).grid(row=0, column=1, sticky="ew", padx=2)
+        ttk.Button(buttons, text="Delete", command=self.delete_record).grid(row=0, column=2, sticky="ew", padx=2)
+        ttk.Button(form_wrap, text="Clear Form", command=self.clear_form).grid(
+            row=len(self.columns) + 1,
+            column=0,
+            columnspan=2,
+            sticky="ew",
+            pady=(8, 0),
+        )
+
+        self.refresh_table()
+
+    def _clear_placeholder(self, event):
+        if event.widget.get() == "Search...":
+            event.widget.delete(0, tk.END)
+
+    def pack_into_notebook(self, notebook):
+        notebook.add(self.frame, text=DISPLAY_NAMES[self.dataset])
+
+    def filter_records(self, records):
+        query = self.search_var.get().strip().lower()
+        if not query or query == "search...":
+            return records
+        filtered = []
+        for record in records:
+            content = " ".join(record.values()).lower()
+            if query in content:
+                filtered.append(record)
+        return filtered
+
+    def refresh_table(self):
+        for row_id in self.table.get_children():
+            self.table.delete(row_id)
+        records = self.filter_records(read_records(self.dataset))
+        for record in records:
+            values = [record[col] for col in self.columns]
+            self.table.insert("", tk.END, values=values)
+
+    def clear_form(self):
+        for field in self.columns:
+            self.field_vars[field].set("")
+
+    def current_form_record(self):
+        return {field: self.field_vars[field].get().strip() for field in self.columns}
+
+    def load_selected_record(self, _event=None):
+        selected = self.table.focus()
+        if not selected:
+            return
+        values = self.table.item(selected, "values")
+        for field, value in zip(self.columns, values):
+            self.field_vars[field].set(value)
+
+    def validate(self, record):
+        if any(not value for value in record.values()):
+            messagebox.showerror("Validation Error", "All fields are required.")
+            return False
+        return True
+
+    def add_record(self):
+        record = self.current_form_record()
+        if not self.validate(record):
+            return
+        records = read_records(self.dataset)
+        record_id = record[self.primary_key]
+        if any(row[self.primary_key] == record_id for row in records):
+            messagebox.showerror("Duplicate ID", f"{self.primary_key} already exists.")
+            return
+        records.append(record)
+        write_records(self.dataset, records)
+        self.refresh_table()
+        self.refresh_dashboard()
+        self.clear_form()
+        messagebox.showinfo("Success", f"{DISPLAY_NAMES[self.dataset][:-1]} added.")
+
+    def update_record(self):
+        record = self.current_form_record()
+        if not self.validate(record):
+            return
+        records = read_records(self.dataset)
+        target_id = record[self.primary_key]
+        updated = False
+        for idx, row in enumerate(records):
+            if row[self.primary_key] == target_id:
+                records[idx] = record
+                updated = True
+                break
+        if not updated:
+            messagebox.showerror("Not Found", f"{self.primary_key} not found.")
+            return
+        write_records(self.dataset, records)
+        self.refresh_table()
+        self.refresh_dashboard()
+        messagebox.showinfo("Success", f"{DISPLAY_NAMES[self.dataset][:-1]} updated.")
+
+    def delete_record(self):
+        record = self.current_form_record()
+        target_id = record[self.primary_key]
+        if not target_id:
+            messagebox.showerror("Validation Error", f"{self.primary_key} is required for delete.")
+            return
+        records = read_records(self.dataset)
+        new_records = [row for row in records if row[self.primary_key] != target_id]
+        if len(new_records) == len(records):
+            messagebox.showerror("Not Found", f"{self.primary_key} not found.")
+            return
+        write_records(self.dataset, new_records)
+        self.refresh_table()
+        self.refresh_dashboard()
+        self.clear_form()
+        messagebox.showinfo("Success", f"{DISPLAY_NAMES[self.dataset][:-1]} deleted.")
+
+
+class Dashboard:
+    def __init__(self, parent):
+        self.frame = ttk.Frame(parent, padding=12)
+        self.stats = {}
+        title = ttk.Label(self.frame, text="Library Control Center", font=("Segoe UI Black", 20))
+        title.pack(anchor="w", pady=(0, 10))
+
+        self.grid = ttk.Frame(self.frame)
+        self.grid.pack(fill="x")
+        self.grid.columnconfigure((0, 1, 2, 3, 4), weight=1)
+
+        labels = [
+            ("books", "Books"),
+            ("students", "Students"),
+            ("librarians", "Librarians"),
+            ("borrow", "Borrowed"),
+            ("return", "Returned"),
+        ]
+        for idx, (dataset, text) in enumerate(labels):
+            card = ttk.LabelFrame(self.grid, text=text, padding=10)
+            card.grid(row=0, column=idx, sticky="nsew", padx=4)
+            value = ttk.Label(card, text="0", font=("Segoe UI Black", 22))
+            value.pack()
+            self.stats[dataset] = value
+
+        self.hint = ttk.Label(
+            self.frame,
+            text="Use tabs to manage records. Search updates tables instantly.",
+            foreground="#3f3f3f",
+            font=("Segoe UI", 10),
+        )
+        self.hint.pack(anchor="w", pady=(10, 0))
+
+    def refresh(self):
+        for dataset, label in self.stats.items():
+            label.configure(text=str(len(read_records(dataset))))
+
+
+class LibraryApp:
+    def __init__(self):
+        self.root = tk.Tk()
+        self.root.title("Advanced Library Management UI")
+        self.root.geometry("1220x720")
+        self.root.minsize(980, 620)
+
+        style = ttk.Style()
+        style.theme_use("clam")
+        style.configure("TNotebook.Tab", padding=(16, 10), font=("Segoe UI Semibold", 10))
+
+        container = ttk.Frame(self.root, padding=10)
+        container.pack(fill="both", expand=True)
+        container.rowconfigure(1, weight=1)
+        container.columnconfigure(0, weight=1)
+
+        self.dashboard = Dashboard(container)
+        self.dashboard.frame.grid(row=0, column=0, sticky="ew")
+
+        self.tabs = ttk.Notebook(container)
+        self.tabs.grid(row=1, column=0, sticky="nsew", pady=(8, 0))
+
+        self.data_tabs = []
+        for dataset in ["books", "students", "librarians", "borrow", "return"]:
+            tab = DataTab(self.tabs, dataset, self.dashboard.refresh)
+            tab.pack_into_notebook(self.tabs)
+            self.data_tabs.append(tab)
+
+        self.dashboard.refresh()
+
+    def run(self):
+        self.root.mainloop()
+
+
+if __name__ == "__main__":
+    LibraryApp().run()
